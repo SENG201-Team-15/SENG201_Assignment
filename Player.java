@@ -1,0 +1,88 @@
+package dinosauria;
+
+import java.util.ArrayList;
+
+public class Player {
+	private String name;
+	private int balance;
+	private int	score;
+	private ArrayList<Pet> pets;
+	private ArrayList consumables;
+	
+	
+	/**
+	 * Initialises a new Player object.
+	 * 
+	 * @param newName The name of the new player.
+	 */
+	public Player (String newName)
+	{
+		name = newName;
+		balance = 1000;
+		score = 0;
+		pets = new ArrayList<Pet>();
+		consumables = new ArrayList();
+	}
+
+	
+	/**
+	 * Returns the name of the player.
+	 * 
+	 * @return String corresponding to player's name.
+	 */
+	public String getName ()
+	{
+		return name;
+	}
+	
+	
+	/**
+	 * Returns the ArrayList containing the pets owned by the player.
+	 * 
+	 * @return ArrayList pets.
+	 */
+	public ArrayList<Pet> getPets()
+	{
+		return pets;
+	}
+	
+	
+	/**
+	 * Associates a new pet with the player.
+	 * 
+	 * @param newPet A pet object.
+	 */
+	public void addPet(Pet newPet)
+	{
+		pets.add(newPet);
+	}
+	
+	
+	/**
+	 * Returns the number of pets the player has as an integer.
+	 * 
+	 * @return int equal to the size of ArrayList 'pets'.
+	 */
+	public int getPetNumber()
+	{
+		return pets.size();
+	}
+	
+	
+	/**
+	 * Compares the current Player object to a second Player object and returns
+	 * true if their names are identical. Returns false otherwise.
+	 * 
+	 * @param other Another Player object.
+	 * @return	boolean which is true if the name of the two Player objects is
+	 * identical, false otherwise.
+	 */
+	public boolean equals(Player other)
+	{
+		if (name.equals(other.name)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+}
