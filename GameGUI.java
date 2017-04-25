@@ -4,8 +4,8 @@
  * DESCRIPTION
  * 
  * @author Robert Bruce
- * @version 0.3
- * @since 2017-04-20
+ * @version 0.4
+ * @since 2017-04-23
  */
 
 package dinosauria;
@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import javax.swing.JFormattedTextField;
 import javax.swing.JSplitPane;
 import javax.swing.JComboBox;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 
@@ -52,10 +53,12 @@ public class GameGUI extends JFrame {
 
 	private JPanel contentPane;
 		
-	private int playerNumber;
-	private int dayNumber;
+	private static int playerNumber;
+	private static int dayNumber;
+	private static int currentDay = 1;
+	private static int actionPoints = 2;
 	
-	private ArrayList<Player> players = new ArrayList<Player>();
+	private static ArrayList<Player> players = new ArrayList<Player>();
 	
 	private ImageIcon titleImage = new ImageIcon(GameGUI.class.getResource("/dinosauria/titleImage.png"));
 	private ImageIcon tyrannosaurusImage = new ImageIcon(GameGUI.class.getResource("/dinosauria/tyrannosaurusImage.png"));
@@ -92,7 +95,7 @@ public class GameGUI extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(50, 50, 1280, 720);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(255, 0, 0));
+		contentPane.setBackground(Color.RED);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new CardLayout(0, 0));
@@ -117,21 +120,27 @@ public class GameGUI extends JFrame {
 		
 		JButton startNewGameButton = new JButton("Start New Game");
 		startNewGameButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		startNewGameButton.setBounds(434, 631, 396, 30);
+		startNewGameButton.setBounds(331, 631, 291, 30);
 		startNewGameButton.setFocusPainted(false);
 		panelStart.add(startNewGameButton);
 		
 		JButton startHelpButton = new JButton("Help");
 		startHelpButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		startHelpButton.setBounds(20, 631, 395, 30);
+		startHelpButton.setBounds(20, 631, 291, 30);
 		startHelpButton.setFocusPainted(false);
 		panelStart.add(startHelpButton);
 		
 		JButton startCreditsButton = new JButton("Credits");
 		startCreditsButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		startCreditsButton.setBounds(849, 631, 395, 30);
+		startCreditsButton.setBounds(953, 631, 291, 30);
 		startCreditsButton.setFocusPainted(false);
 		panelStart.add(startCreditsButton);
+		
+		JButton startLoadButton = new JButton("Load");
+		startLoadButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		startLoadButton.setFocusPainted(false);
+		startLoadButton.setBounds(642, 631, 291, 30);
+		panelStart.add(startLoadButton);
 		
 		JPanel panelHelp = new JPanel();
 		panelHelp.setLayout(null);
@@ -414,11 +423,452 @@ public class GameGUI extends JFrame {
 		panelGame.setBackground(new Color(204, 255, 204));
 		contentPane.add(panelGame, "GAME");
 		
-		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setIcon(new ImageIcon(GameGUI.class.getResource("/dinosauria/underconstructionImage.png")));
-		lblNewLabel_1.setBounds(0, 0, 1264, 683);
-		panelGame.add(lblNewLabel_1);
+		JButton gameSaveButton = new JButton("Save");
+		gameSaveButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				SaveLoad.saveGame("test", players, playerNumber, dayNumber, currentDay, actionPoints);
+			}
+		});
+		gameSaveButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		gameSaveButton.setFocusPainted(false);
+		gameSaveButton.setBounds(20, 631, 291, 30);
+		panelGame.add(gameSaveButton);
+		
+		JButton gameContinueButton = new JButton("Continue");
+		gameContinueButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		gameContinueButton.setFocusPainted(false);
+		gameContinueButton.setBounds(953, 631, 291, 30);
+		panelGame.add(gameContinueButton);
+		
+		JButton gameStoreButton = new JButton("Store");
+		gameStoreButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		gameStoreButton.setFocusPainted(false);
+		gameStoreButton.setBounds(331, 631, 291, 30);
+		panelGame.add(gameStoreButton);
+		
+		JButton gameInventoryButton = new JButton("Inventory");
+		gameInventoryButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		gameInventoryButton.setFocusPainted(false);
+		gameInventoryButton.setBounds(642, 631, 291, 30);
+		panelGame.add(gameInventoryButton);
+		
+		JLabel gameTitle = new JLabel("");
+		gameTitle.setHorizontalAlignment(SwingConstants.LEFT);
+		gameTitle.setFont(new Font("Tahoma", Font.PLAIN, 26));
+		gameTitle.setBounds(20, 20, 600, 30);
+		panelGame.add(gameTitle);
+		
+		JLabel gameActionPointsText = new JLabel("Action Points Remaining: " + actionPoints);
+		gameActionPointsText.setHorizontalAlignment(SwingConstants.CENTER);
+		gameActionPointsText.setFont(new Font("Tahoma", Font.BOLD, 14));
+		gameActionPointsText.setBounds(1048, 20, 200, 30);
+		panelGame.add(gameActionPointsText);
+		
+		JPanel panelGamePet1 = new JPanel();
+		panelGamePet1.setBackground(new Color(204, 255, 204));
+		panelGamePet1.setBounds(20, 70, 395, 550);
+		panelGame.add(panelGamePet1);
+		panelGamePet1.setLayout(null);
+		
+		JLabel pet1Image = new JLabel("");
+		pet1Image.setHorizontalAlignment(SwingConstants.CENTER);
+		pet1Image.setBounds(0, 0, 395, 150);
+		panelGamePet1.add(pet1Image);
+		
+		JLabel pet1Name = new JLabel("Pet 1");
+		pet1Name.setHorizontalAlignment(SwingConstants.CENTER);
+		pet1Name.setFont(new Font("Tahoma", Font.BOLD, 14));
+		pet1Name.setBounds(0, 160, 395, 20);
+		panelGamePet1.add(pet1Name);
+		
+		JLabel pet1State = new JLabel("sick and/or angry or dead");
+		pet1State.setHorizontalAlignment(SwingConstants.CENTER);
+		pet1State.setFont(new Font("Tahoma", Font.ITALIC, 14));
+		pet1State.setBounds(0, 190, 395, 20);
+		panelGamePet1.add(pet1State);
+		
+		JLabel pet1BoredomText = new JLabel("Boredom");
+		pet1BoredomText.setHorizontalAlignment(SwingConstants.CENTER);
+		pet1BoredomText.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet1BoredomText.setBounds(0, 220, 95, 20);
+		panelGamePet1.add(pet1BoredomText);
+		
+		JLabel pet1FatigueText = new JLabel("Fatigue");
+		pet1FatigueText.setHorizontalAlignment(SwingConstants.CENTER);
+		pet1FatigueText.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet1FatigueText.setBounds(0, 250, 95, 20);
+		panelGamePet1.add(pet1FatigueText);
+		
+		JLabel pet1HungerText = new JLabel("Hunger");
+		pet1HungerText.setHorizontalAlignment(SwingConstants.CENTER);
+		pet1HungerText.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet1HungerText.setBounds(0, 280, 95, 20);
+		panelGamePet1.add(pet1HungerText);
+		
+		JLabel pet1BladderText = new JLabel("Bladder");
+		pet1BladderText.setHorizontalAlignment(SwingConstants.CENTER);
+		pet1BladderText.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet1BladderText.setBounds(0, 310, 95, 20);
+		panelGamePet1.add(pet1BladderText);
+		
+		JLabel pet1WeightText = new JLabel("Weight");
+		pet1WeightText.setHorizontalAlignment(SwingConstants.CENTER);
+		pet1WeightText.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet1WeightText.setBounds(0, 340, 95, 20);
+		panelGamePet1.add(pet1WeightText);
+		
+		JLabel pet1BoredomBorder = new JLabel("");
+		pet1BoredomBorder.setHorizontalAlignment(SwingConstants.CENTER);
+		pet1BoredomBorder.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet1BoredomBorder.setBorder(BorderFactory.createLineBorder(Color.black));
+		pet1BoredomBorder.setBounds(95, 220, 300, 20);
+		panelGamePet1.add(pet1BoredomBorder);
+		
+		JLabel pet1BoredomBar = new JLabel("");
+		pet1BoredomBar.setOpaque(true);
+		pet1BoredomBar.setHorizontalAlignment(SwingConstants.CENTER);
+		pet1BoredomBar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet1BoredomBar.setBackground(Color.RED);
+		pet1BoredomBar.setBounds(95, 220, 200, 20);
+		panelGamePet1.add(pet1BoredomBar);
+		
+		JLabel pet1FatigueBorder = new JLabel("");
+		pet1FatigueBorder.setHorizontalAlignment(SwingConstants.CENTER);
+		pet1FatigueBorder.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet1FatigueBorder.setBorder(BorderFactory.createLineBorder(Color.black));
+		pet1FatigueBorder.setBounds(95, 250, 300, 20);
+		panelGamePet1.add(pet1FatigueBorder);
+		
+		JLabel pet1FatigueBar = new JLabel("");
+		pet1FatigueBar.setOpaque(true);
+		pet1FatigueBar.setHorizontalAlignment(SwingConstants.CENTER);
+		pet1FatigueBar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet1FatigueBar.setBackground(Color.RED);
+		pet1FatigueBar.setBounds(95, 250, 200, 20);
+		panelGamePet1.add(pet1FatigueBar);
+		
+		JLabel pet1HungerBorder = new JLabel("");
+		pet1HungerBorder.setHorizontalAlignment(SwingConstants.CENTER);
+		pet1HungerBorder.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet1HungerBorder.setBorder(BorderFactory.createLineBorder(Color.black));
+		pet1HungerBorder.setBounds(95, 280, 300, 20);
+		panelGamePet1.add(pet1HungerBorder);
+		
+		JLabel pet1HungerBar = new JLabel("");
+		pet1HungerBar.setOpaque(true);
+		pet1HungerBar.setHorizontalAlignment(SwingConstants.CENTER);
+		pet1HungerBar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet1HungerBar.setBackground(Color.RED);
+		pet1HungerBar.setBounds(95, 280, 200, 20);
+		panelGamePet1.add(pet1HungerBar);
+		
+		JLabel pet1BladderBorder = new JLabel("");
+		pet1BladderBorder.setHorizontalAlignment(SwingConstants.CENTER);
+		pet1BladderBorder.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet1BladderBorder.setBorder(BorderFactory.createLineBorder(Color.black));
+		pet1BladderBorder.setBounds(95, 310, 300, 20);
+		panelGamePet1.add(pet1BladderBorder);
+		
+		JLabel pet1BladderBar = new JLabel("");
+		pet1BladderBar.setOpaque(true);
+		pet1BladderBar.setHorizontalAlignment(SwingConstants.CENTER);
+		pet1BladderBar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet1BladderBar.setBackground(Color.RED);
+		pet1BladderBar.setBounds(95, 310, 200, 20);
+		panelGamePet1.add(pet1BladderBar);
+		
+		JLabel pet1WeightBorderLeft = new JLabel("");
+		pet1WeightBorderLeft.setHorizontalAlignment(SwingConstants.CENTER);
+		pet1WeightBorderLeft.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet1WeightBorderLeft.setBorder(BorderFactory.createLineBorder(Color.black));
+		pet1WeightBorderLeft.setBounds(95, 340, 150, 20);
+		panelGamePet1.add(pet1WeightBorderLeft);
+		
+		JLabel pet1WeightBorderRight = new JLabel("");
+		pet1WeightBorderRight.setHorizontalAlignment(SwingConstants.CENTER);
+		pet1WeightBorderRight.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet1WeightBorderRight.setBorder(BorderFactory.createLineBorder(Color.black));
+		pet1WeightBorderRight.setBounds(245, 340, 150, 20);
+		panelGamePet1.add(pet1WeightBorderRight);
+		
+		JLabel pet1WeightBar = new JLabel("");
+		pet1WeightBar.setOpaque(true);
+		pet1WeightBar.setHorizontalAlignment(SwingConstants.CENTER);
+		pet1WeightBar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet1WeightBar.setBackground(Color.RED);
+		pet1WeightBar.setBounds(245, 340, 25, 20);
+		panelGamePet1.add(pet1WeightBar);
+		
+		JPanel panelGamePet2 = new JPanel();
+		panelGamePet2.setBackground(new Color(204, 255, 204));
+		panelGamePet2.setLayout(null);
+		panelGamePet2.setBounds(434, 70, 395, 550);
+		panelGame.add(panelGamePet2);
+		
+		JLabel pet2Image = new JLabel("");
+		pet2Image.setHorizontalAlignment(SwingConstants.CENTER);
+		pet2Image.setBounds(0, 0, 395, 150);
+		panelGamePet2.add(pet2Image);
+		
+		JLabel pet2Name = new JLabel("Pet 1");
+		pet2Name.setHorizontalAlignment(SwingConstants.CENTER);
+		pet2Name.setFont(new Font("Tahoma", Font.BOLD, 14));
+		pet2Name.setBounds(0, 160, 395, 20);
+		panelGamePet2.add(pet2Name);
+		
+		JLabel pet2State = new JLabel("sick and/or angry or dead");
+		pet2State.setHorizontalAlignment(SwingConstants.CENTER);
+		pet2State.setFont(new Font("Tahoma", Font.ITALIC, 14));
+		pet2State.setBounds(0, 190, 395, 20);
+		panelGamePet2.add(pet2State);
+		
+		JLabel pet2BoredomText = new JLabel("Boredom");
+		pet2BoredomText.setHorizontalAlignment(SwingConstants.CENTER);
+		pet2BoredomText.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet2BoredomText.setBounds(0, 220, 95, 20);
+		panelGamePet2.add(pet2BoredomText);
+		
+		JLabel pet2FatigueText = new JLabel("Fatigue");
+		pet2FatigueText.setHorizontalAlignment(SwingConstants.CENTER);
+		pet2FatigueText.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet2FatigueText.setBounds(0, 250, 95, 20);
+		panelGamePet2.add(pet2FatigueText);
+		
+		JLabel pet2HungerText = new JLabel("Hunger");
+		pet2HungerText.setHorizontalAlignment(SwingConstants.CENTER);
+		pet2HungerText.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet2HungerText.setBounds(0, 280, 95, 20);
+		panelGamePet2.add(pet2HungerText);
+		
+		JLabel pet2BladderText = new JLabel("Bladder");
+		pet2BladderText.setHorizontalAlignment(SwingConstants.CENTER);
+		pet2BladderText.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet2BladderText.setBounds(0, 310, 95, 20);
+		panelGamePet2.add(pet2BladderText);
+		
+		JLabel pet2WeightText = new JLabel("Weight");
+		pet2WeightText.setHorizontalAlignment(SwingConstants.CENTER);
+		pet2WeightText.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet2WeightText.setBounds(0, 340, 95, 20);
+		panelGamePet2.add(pet2WeightText);
+		
+		JLabel pet2BoredomBorder = new JLabel("");
+		pet2BoredomBorder.setHorizontalAlignment(SwingConstants.CENTER);
+		pet2BoredomBorder.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet2BoredomBorder.setBorder(BorderFactory.createLineBorder(Color.black));
+		pet2BoredomBorder.setBounds(95, 220, 300, 20);
+		panelGamePet2.add(pet2BoredomBorder);
+		
+		JLabel pet2BoredomBar = new JLabel("");
+		pet2BoredomBar.setOpaque(true);
+		pet2BoredomBar.setHorizontalAlignment(SwingConstants.CENTER);
+		pet2BoredomBar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet2BoredomBar.setBackground(Color.RED);
+		pet2BoredomBar.setBounds(95, 220, 200, 20);
+		panelGamePet2.add(pet2BoredomBar);
+		
+		JLabel pet2FatigueBorder = new JLabel("");
+		pet2FatigueBorder.setHorizontalAlignment(SwingConstants.CENTER);
+		pet2FatigueBorder.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet2FatigueBorder.setBorder(BorderFactory.createLineBorder(Color.black));
+		pet2FatigueBorder.setBounds(95, 250, 300, 20);
+		panelGamePet2.add(pet2FatigueBorder);
+		
+		JLabel pet2FatigueBar = new JLabel("");
+		pet2FatigueBar.setOpaque(true);
+		pet2FatigueBar.setHorizontalAlignment(SwingConstants.CENTER);
+		pet2FatigueBar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet2FatigueBar.setBackground(Color.RED);
+		pet2FatigueBar.setBounds(95, 250, 200, 20);
+		panelGamePet2.add(pet2FatigueBar);
+		
+		JLabel pet2HungerBorder = new JLabel("");
+		pet2HungerBorder.setHorizontalAlignment(SwingConstants.CENTER);
+		pet2HungerBorder.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet2HungerBorder.setBorder(BorderFactory.createLineBorder(Color.black));
+		pet2HungerBorder.setBounds(95, 280, 300, 20);
+		panelGamePet2.add(pet2HungerBorder);
+		
+		JLabel pet2HungerBar = new JLabel("");
+		pet2HungerBar.setOpaque(true);
+		pet2HungerBar.setHorizontalAlignment(SwingConstants.CENTER);
+		pet2HungerBar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet2HungerBar.setBackground(Color.RED);
+		pet2HungerBar.setBounds(95, 280, 200, 20);
+		panelGamePet2.add(pet2HungerBar);
+		
+		JLabel pet2BladderBorder = new JLabel("");
+		pet2BladderBorder.setHorizontalAlignment(SwingConstants.CENTER);
+		pet2BladderBorder.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet2BladderBorder.setBorder(BorderFactory.createLineBorder(Color.black));
+		pet2BladderBorder.setBounds(95, 310, 300, 20);
+		panelGamePet2.add(pet2BladderBorder);
+		
+		JLabel pet2BladderBar = new JLabel("");
+		pet2BladderBar.setOpaque(true);
+		pet2BladderBar.setHorizontalAlignment(SwingConstants.CENTER);
+		pet2BladderBar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet2BladderBar.setBackground(Color.RED);
+		pet2BladderBar.setBounds(95, 310, 200, 20);
+		panelGamePet2.add(pet2BladderBar);
+		
+		JLabel pet2WeightBorderLeft = new JLabel("");
+		pet2WeightBorderLeft.setHorizontalAlignment(SwingConstants.CENTER);
+		pet2WeightBorderLeft.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet2WeightBorderLeft.setBorder(BorderFactory.createLineBorder(Color.black));
+		pet2WeightBorderLeft.setBounds(95, 340, 150, 20);
+		panelGamePet2.add(pet2WeightBorderLeft);
+		
+		JLabel pet2WeightBorderRight = new JLabel("");
+		pet2WeightBorderRight.setHorizontalAlignment(SwingConstants.CENTER);
+		pet2WeightBorderRight.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet2WeightBorderRight.setBorder(BorderFactory.createLineBorder(Color.black));
+		pet2WeightBorderRight.setBounds(245, 340, 150, 20);
+		panelGamePet2.add(pet2WeightBorderRight);
+		
+		JLabel pet2WeightBar = new JLabel("");
+		pet2WeightBar.setOpaque(true);
+		pet2WeightBar.setHorizontalAlignment(SwingConstants.CENTER);
+		pet2WeightBar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet2WeightBar.setBackground(Color.RED);
+		pet2WeightBar.setBounds(245, 340, 25, 20);
+		panelGamePet2.add(pet2WeightBar);
+		
+		JPanel panelGamePet3 = new JPanel();
+		panelGamePet3.setBackground(new Color(204, 255, 204));
+		panelGamePet3.setLayout(null);
+		panelGamePet3.setBounds(849, 70, 395, 550);
+		panelGame.add(panelGamePet3);
+		
+		JLabel pet3Image = new JLabel("");
+		pet3Image.setHorizontalAlignment(SwingConstants.CENTER);
+		pet3Image.setBounds(0, 0, 395, 150);
+		panelGamePet3.add(pet3Image);
+		
+		JLabel pet3Name = new JLabel("Pet 1");
+		pet3Name.setHorizontalAlignment(SwingConstants.CENTER);
+		pet3Name.setFont(new Font("Tahoma", Font.BOLD, 14));
+		pet3Name.setBounds(0, 160, 395, 20);
+		panelGamePet3.add(pet3Name);
+		
+		JLabel pet3State = new JLabel("sick and/or angry or dead");
+		pet3State.setHorizontalAlignment(SwingConstants.CENTER);
+		pet3State.setFont(new Font("Tahoma", Font.ITALIC, 14));
+		pet3State.setBounds(0, 190, 395, 20);
+		panelGamePet3.add(pet3State);
+		
+		JLabel pet3BoredomText = new JLabel("Boredom");
+		pet3BoredomText.setHorizontalAlignment(SwingConstants.CENTER);
+		pet3BoredomText.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet3BoredomText.setBounds(0, 220, 95, 20);
+		panelGamePet3.add(pet3BoredomText);
+		
+		JLabel pet3FatigueText = new JLabel("Fatigue");
+		pet3FatigueText.setHorizontalAlignment(SwingConstants.CENTER);
+		pet3FatigueText.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet3FatigueText.setBounds(0, 250, 95, 20);
+		panelGamePet3.add(pet3FatigueText);
+		
+		JLabel pet3HungerText = new JLabel("Hunger");
+		pet3HungerText.setHorizontalAlignment(SwingConstants.CENTER);
+		pet3HungerText.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet3HungerText.setBounds(0, 280, 95, 20);
+		panelGamePet3.add(pet3HungerText);
+		
+		JLabel pet3BladderText = new JLabel("Bladder");
+		pet3BladderText.setHorizontalAlignment(SwingConstants.CENTER);
+		pet3BladderText.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet3BladderText.setBounds(0, 310, 95, 20);
+		panelGamePet3.add(pet3BladderText);
+		
+		JLabel pet3WeightText = new JLabel("Weight");
+		pet3WeightText.setHorizontalAlignment(SwingConstants.CENTER);
+		pet3WeightText.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet3WeightText.setBounds(0, 340, 95, 20);
+		panelGamePet3.add(pet3WeightText);
+		
+		JLabel pet3BoredomBorder = new JLabel("");
+		pet3BoredomBorder.setHorizontalAlignment(SwingConstants.CENTER);
+		pet3BoredomBorder.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet3BoredomBorder.setBorder(BorderFactory.createLineBorder(Color.black));
+		pet3BoredomBorder.setBounds(95, 220, 300, 20);
+		panelGamePet3.add(pet3BoredomBorder);
+		
+		JLabel pet3BoredomBar = new JLabel("");
+		pet3BoredomBar.setOpaque(true);
+		pet3BoredomBar.setHorizontalAlignment(SwingConstants.CENTER);
+		pet3BoredomBar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet3BoredomBar.setBackground(Color.RED);
+		pet3BoredomBar.setBounds(95, 220, 200, 20);
+		panelGamePet3.add(pet3BoredomBar);
+		
+		JLabel pet3FatigueBorder = new JLabel("");
+		pet3FatigueBorder.setHorizontalAlignment(SwingConstants.CENTER);
+		pet3FatigueBorder.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet3FatigueBorder.setBorder(BorderFactory.createLineBorder(Color.black));
+		pet3FatigueBorder.setBounds(95, 250, 300, 20);
+		panelGamePet3.add(pet3FatigueBorder);
+		
+		JLabel pet3FatigueBar = new JLabel("");
+		pet3FatigueBar.setOpaque(true);
+		pet3FatigueBar.setHorizontalAlignment(SwingConstants.CENTER);
+		pet3FatigueBar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet3FatigueBar.setBackground(Color.RED);
+		pet3FatigueBar.setBounds(95, 250, 200, 20);
+		panelGamePet3.add(pet3FatigueBar);
+		
+		JLabel pet3HungerBorder = new JLabel("");
+		pet3HungerBorder.setHorizontalAlignment(SwingConstants.CENTER);
+		pet3HungerBorder.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet3HungerBorder.setBorder(BorderFactory.createLineBorder(Color.black));
+		pet3HungerBorder.setBounds(95, 280, 300, 20);
+		panelGamePet3.add(pet3HungerBorder);
+		
+		JLabel pet3HungerBar = new JLabel("");
+		pet3HungerBar.setOpaque(true);
+		pet3HungerBar.setHorizontalAlignment(SwingConstants.CENTER);
+		pet3HungerBar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet3HungerBar.setBackground(Color.RED);
+		pet3HungerBar.setBounds(95, 280, 200, 20);
+		panelGamePet3.add(pet3HungerBar);
+		
+		JLabel pet3BladderBorder = new JLabel("");
+		pet3BladderBorder.setHorizontalAlignment(SwingConstants.CENTER);
+		pet3BladderBorder.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet3BladderBorder.setBorder(BorderFactory.createLineBorder(Color.black));
+		pet3BladderBorder.setBounds(95, 310, 300, 20);
+		panelGamePet3.add(pet3BladderBorder);
+		
+		JLabel pet3BladderBar = new JLabel("");
+		pet3BladderBar.setOpaque(true);
+		pet3BladderBar.setHorizontalAlignment(SwingConstants.CENTER);
+		pet3BladderBar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet3BladderBar.setBackground(Color.RED);
+		pet3BladderBar.setBounds(95, 310, 200, 20);
+		panelGamePet3.add(pet3BladderBar);
+		
+		JLabel pet3WeightBorderLeft = new JLabel("");
+		pet3WeightBorderLeft.setHorizontalAlignment(SwingConstants.CENTER);
+		pet3WeightBorderLeft.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet3WeightBorderLeft.setBorder(BorderFactory.createLineBorder(Color.black));
+		pet3WeightBorderLeft.setBounds(95, 340, 150, 20);
+		panelGamePet3.add(pet3WeightBorderLeft);
+		
+		JLabel pet3WeightBorderRight = new JLabel("");
+		pet3WeightBorderRight.setHorizontalAlignment(SwingConstants.CENTER);
+		pet3WeightBorderRight.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet3WeightBorderRight.setBorder(BorderFactory.createLineBorder(Color.black));
+		pet3WeightBorderRight.setBounds(245, 340, 150, 20);
+		panelGamePet3.add(pet3WeightBorderRight);
+		
+		JLabel pet3WeightBar = new JLabel("");
+		pet3WeightBar.setOpaque(true);
+		pet3WeightBar.setHorizontalAlignment(SwingConstants.CENTER);
+		pet3WeightBar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		pet3WeightBar.setBackground(Color.RED);
+		pet3WeightBar.setBounds(245, 340, 25, 20);
+		panelGamePet3.add(pet3WeightBar);
 		
 		// EVENT HANDLERS FOR START
 		startHelpButton.addMouseListener(new MouseAdapter() {
@@ -529,36 +979,134 @@ public class GameGUI extends JFrame {
 							"These options cannot be changed later.", null, 
 							JOptionPane.YES_NO_OPTION);
 					if(confirmation == JOptionPane.YES_OPTION) {
-					createNewPlayer((String) newplayerPlayerName.getText(),
+						createNewPlayer((String) newplayerPlayerName.getText(),
 							(String) newplayerPet1Species.getSelectedItem(),
 							newplayerPet1Name.getText(),
 							(String) newplayerPet2Species.getSelectedItem(),
 							newplayerPet2Name.getText(),
 							(String) newplayerPet3Species.getSelectedItem(),
 							newplayerPet3Name.getText());
-					if (playerNumber > players.size()) {
-						newplayerTitleText.setText("Create Player " + (players.size() + 1));
-						newplayerPlayerName.setText("");
-						newplayerPet1Species.setSelectedItem("");
-						newplayerPet2Species.setSelectedItem("");
-						newplayerPet3Species.setSelectedItem("");
-						displaySpecies(newplayerPet1Species, 
-								newplayerPet1NameText, newplayerPet1Name,
-								newplayerPet1Image, newplayerPet1DescText);
-						displaySpecies(newplayerPet2Species, 
-								newplayerPet2NameText, newplayerPet2Name,
-								newplayerPet2Image, newplayerPet2DescText);
-						displaySpecies(newplayerPet2Species, 
-								newplayerPet3NameText, newplayerPet3Name,
-								newplayerPet3Image, newplayerPet3DescText);
-					} else {
-						CardLayout currentLayout = (CardLayout)(contentPane.getLayout());
-						currentLayout.show(contentPane, "GAME");
+						if (playerNumber > players.size()) {
+							newplayerTitleText.setText("Create Player " + (players.size() + 1));
+							newplayerPlayerName.setText("");
+							newplayerPet1Species.setSelectedItem("");
+							newplayerPet2Species.setSelectedItem("");
+							newplayerPet3Species.setSelectedItem("");
+							displaySpecies(newplayerPet1Species, 
+									newplayerPet1NameText, newplayerPet1Name,
+									newplayerPet1Image, newplayerPet1DescText);
+							displaySpecies(newplayerPet2Species, 
+									newplayerPet2NameText, newplayerPet2Name,
+									newplayerPet2Image, newplayerPet2DescText);
+							displaySpecies(newplayerPet2Species, 
+									newplayerPet3NameText, newplayerPet3Name,
+									newplayerPet3Image, newplayerPet3DescText);
+						} else {
+							playerNumber = 0;
+							CardLayout currentLayout = (CardLayout)(contentPane.getLayout());
+							currentLayout.show(contentPane, "GAME");
+							gameTitle.setText("Day " + currentDay + " - " + players.get(playerNumber).getName());
+							displayGameSpace(panelGamePet1, panelGamePet2, panelGamePet3);
+						}
 					}
-				}
 				}
 			}
 		});
+		
+		//TEST HANDLER
+		startLoadButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				SaveLoad.loadGame("test");
+				CardLayout currentLayout = (CardLayout)(contentPane.getLayout());
+				currentLayout.show(contentPane, "GAME");
+				gameTitle.setText("Day " + currentDay + " - " + players.get(playerNumber).getName());
+				displayGameSpace(panelGamePet1, panelGamePet2, panelGamePet3);
+			}
+		});
+	}
+	
+	//private void displayPet
+	
+	private void displayGamePet (JPanel panel, Pet pet)
+	{
+		((JLabel) panel.getComponent(0)).setIcon(pet.getImage()); // Image.
+		((JLabel) panel.getComponent(1)).setText(pet.getName()); // Name.
+		((JLabel) panel.getComponent(2)).setText(pet.getMood()); // Mood.
+		
+		// Display Boredom
+		((JLabel) panel.getComponent(9)).setBounds(95, 220, pet.getBoredom() * 3, 20);
+		((JLabel) panel.getComponent(9)).setBackground(getBarColour(pet.getBoredom()));
+		
+		// Display Fatigue
+		((JLabel) panel.getComponent(11)).setBounds(95, 250, pet.getFatigue() * 3, 20);
+		((JLabel) panel.getComponent(11)).setBackground(getBarColour(pet.getFatigue()));
+		
+		// Display Hunger
+		((JLabel) panel.getComponent(13)).setBounds(95, 280, pet.getHunger() * 3, 20);
+		((JLabel) panel.getComponent(13)).setBackground(getBarColour(pet.getHunger()));
+		
+		// Display Bladder
+		((JLabel) panel.getComponent(15)).setBounds(95, 310, pet.getBladder() * 3, 20);
+		((JLabel) panel.getComponent(15)).setBackground(getBarColour(pet.getBladder()));
+		
+		// Display Weight
+		double normalWeight = pet.getWeight() / pet.getSpeciesWeight();
+		if (normalWeight >= 1.0) {
+			normalWeight = (normalWeight - 1) * 1500;
+			((JLabel) panel.getComponent(18)).setBounds(345, 340, (int) normalWeight, 20);
+		} else {
+			normalWeight = (normalWeight - 1) * -1500;
+			((JLabel) panel.getComponent(18)).setBounds(345 - (int) normalWeight, 340, (int) normalWeight, 20);
+		}
+	}
+	
+	private Color getBarColour(int barValue)
+	{
+		// Division by 100.1 to prevent invalid Color parameters.
+		float red = (float) (0.0 + (barValue / 100.1));
+		float green = (float) (1.0 - (barValue / 100.1));
+		
+		return new Color(red, green, (float) 0.0);
+	}
+	
+	private void displayGameSpace(JPanel pet1, JPanel pet2, JPanel pet3)
+	{
+		// Display single panel if player has one pet.
+		if (players.get(playerNumber).getPetNumber() == 1) {
+			pet1.setVisible(true);
+			pet1.setBounds(434, 70, 395, 550);
+			displayGamePet(pet1, players.get(playerNumber).getPets().get(0));
+			
+			pet2.setVisible(false);
+			pet3.setVisible(false);
+			
+		// Display two panels if player has two pets.
+		} else if (players.get(playerNumber).getPetNumber() == 2) {
+			pet1.setVisible(true);
+			pet1.setBounds(158, 70, 395, 550);
+			displayGamePet(pet1, players.get(playerNumber).getPets().get(0));
+			
+			pet2.setVisible(true);
+			pet2.setBounds(711, 70, 395, 550);
+			displayGamePet(pet2, players.get(playerNumber).getPets().get(1));
+			
+			pet3.setVisible(false);
+			
+		// Display three panels if player has three pets.
+		} else {
+			pet1.setVisible(true);
+			pet1.setBounds(20, 70, 395, 550);
+			displayGamePet(pet1, players.get(playerNumber).getPets().get(0));
+			
+			pet2.setVisible(true);
+			pet2.setBounds(434, 70, 395, 550);
+			displayGamePet(pet2, players.get(playerNumber).getPets().get(1));
+			
+			pet3.setVisible(true);
+			pet3.setBounds(849, 70, 395, 550);
+			displayGamePet(pet3, players.get(playerNumber).getPets().get(2));
+		}
 	}
 	
 	private void createNewPlayer (String name,
@@ -696,7 +1244,7 @@ public class GameGUI extends JFrame {
 			} else if (species.getSelectedItem().equals("Troodon")) {
 				image.setIcon(troodonImage);
 				description.setText(Troodon.getDescription());
-			}		
+			} 
 		}
 	}
 		
@@ -788,5 +1336,23 @@ public class GameGUI extends JFrame {
 		JOptionPane.showMessageDialog(contentPane, "'" + name + 
 				"' is not a unique pet name. Remember, pet names are case " +
 				"insensitive. Please select another.");
+	}
+	
+	public static boolean setGameState (ArrayList<Player> newPlayers, int newPlayerNumber,
+			int newDayNumber, int newCurrentDay, int newActionPoints)
+	{
+		if (newPlayers.size() > 0 && newPlayers.size() < 4 && newPlayerNumber >=
+		0 && newPlayerNumber < 3 && newCurrentDay > 0 && newCurrentDay < 101 &&
+		newDayNumber > 0 && newDayNumber < 101 && newActionPoints >= 0 &&
+		newActionPoints < 3) {
+			players = newPlayers;
+			playerNumber = newPlayerNumber;
+			dayNumber = newDayNumber;
+			currentDay = newCurrentDay;
+			actionPoints = newActionPoints;
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

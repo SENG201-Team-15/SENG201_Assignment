@@ -1,9 +1,12 @@
 package dinosauria;
 
+import javax.swing.ImageIcon;
+
 public class Stegosaurus extends Pet
 {
 	private static int speciesWeight = 2400;
 	private static int prestiege = 2;
+	private static ImageIcon image = new ImageIcon(GameGUI.class.getResource("/dinosauria/stegosaurusImage.png"));
 	
 	public Stegosaurus (String newName, String newFood, String newToy)
 	{
@@ -15,7 +18,17 @@ public class Stegosaurus extends Pet
 		return "Stegosaurus";
 	}
 	
-	public String getDescription ()
+	public ImageIcon getImage ()
+	{
+		return image;
+	}
+	
+	public int getSpeciesWeight()
+	{
+		return speciesWeight;
+	}
+	
+	public static String getDescription ()
 	{
 		return "This armoured herbivore is known as the ‘covered lizard’ for " +
 			   "the large dermal plates on its back. A high rate of sickness " +

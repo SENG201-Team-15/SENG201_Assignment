@@ -1,9 +1,12 @@
 package dinosauria;
 
+import javax.swing.ImageIcon;
+
 public class Gigantoraptor extends Pet
 {
 	private static int speciesWeight = 1400;
 	private static int prestiege = 1;
+	private static ImageIcon image = new ImageIcon(GameGUI.class.getResource("/dinosauria/gigantoraptorImage.png"));
 	
 	public Gigantoraptor (String newName, String newFood, String newToy)
 	{
@@ -15,7 +18,17 @@ public class Gigantoraptor extends Pet
 		return "Gigantoraptor";
 	}
 	
-	public String getDescription ()
+	public ImageIcon getImage ()
+	{
+		return image;
+	}
+	
+	public int getSpeciesWeight()
+	{
+		return speciesWeight;
+	}
+	
+	public static String getDescription ()
 	{
 		return "The Gigantoraptor is the larger distant cousin of the " +
 			   "velociraptor. It is an omnivore which gets tires at a slower " +

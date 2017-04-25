@@ -1,9 +1,12 @@
 package dinosauria;
 
+import javax.swing.ImageIcon;
+
 public class Troodon extends Pet
 {
 	private static int speciesWeight = 1400;
 	private static int prestiege = 1;
+	private static ImageIcon image = new ImageIcon(GameGUI.class.getResource("/dinosauria/troodonImage.png"));
 	
 	public Troodon (String newName, String newFood, String newToy)
 	{
@@ -15,7 +18,17 @@ public class Troodon extends Pet
 		return "Troodon";
 	}
 	
-	public String getDescription ()
+	public ImageIcon getImage ()
+	{
+		return image;
+	}
+	
+	public int getSpeciesWeight()
+	{
+		return speciesWeight;
+	}
+	
+	public static String getDescription ()
 	{
 		return "The troodon, like the velociraptor and the gigantoraptor, is " +
 			   "a therapod. Compared to some other dinosaurs, this omnivore " +
