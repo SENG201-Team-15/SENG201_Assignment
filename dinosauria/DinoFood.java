@@ -1,6 +1,8 @@
 package dinosauria;
 
-public class DinoFood extends DinoItem {
+import java.io.Serializable;
+
+public class DinoFood extends DinoItem implements Serializable {
 
 	
 	public int hungerLoss; // nutrition

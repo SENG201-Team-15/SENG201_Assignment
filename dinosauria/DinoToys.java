@@ -1,6 +1,8 @@
 package dinosauria;
 
-public class DinoToys extends DinoItem {
+import java.io.Serializable;
+
+public class DinoToys extends DinoItem implements Serializable {
 
 public int durability;
 public int weightLoss;

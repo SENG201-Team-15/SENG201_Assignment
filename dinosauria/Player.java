@@ -22,7 +22,7 @@ public class Player implements Serializable {
 		balance = 1000;
 		score = 0;
 		pets = new ArrayList<Pet>();
-		inventory = new ArrayList();
+		inventory = new ArrayList<DinoItem>();
 	}
 
 	

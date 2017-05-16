@@ -160,6 +160,8 @@ public abstract class Pet implements Serializable {
 			bladder = limitTrait(bladder + food.toiletGain);
 			weight = limitTrait(bladder + food.weightGain);
 		}
+		
+		actionPoints -= 1;
 	}
 	
 	public void giveToy (DinoToys toy)
@@ -167,16 +169,19 @@ public abstract class Pet implements Serializable {
 		boredom = limitTrait(boredom - toy.boredomLoss);
 		weight = limitTrait(weight - toy.weightLoss);
 		fatigue = limitTrait(fatigue + toy.fatigueGain);
+		actionPoints -= 1;
 	}
 	
 	public void makeSleep ()
 	{
 		fatigue = limitTrait(fatigue - 50 - RandomNumber.getRandomNumber(50));
+		actionPoints -= 1;
 	}
 	
 	public void emptyBladder ()
 	{
 		bladder = limitTrait(fatigue - 50 - RandomNumber.getRandomNumber(50));
+		actionPoints -= 1;
 	}
 	
 	public void revive ()
@@ -218,7 +223,7 @@ public abstract class Pet implements Serializable {
 			angry = false;
 		}
 		
-		if (hunger == 100 || bladder == 100 || weight == 0 || weight == 100 || RandomNumber.getRandomNumber(10) < getPrestige()) {
+		if (!sick && (hunger == 100 || bladder == 100 || weight == 0 || weight == 100 || RandomNumber.getRandomNumber(10) < getPrestige())) {
 			// Pet automatically becomes sick if hunger, bladder, or weight reach extreme. The pet may become sick anyway.
 			sick = true;
 		} else if (sick && hunger < 100 && bladder < 100 && weight > 0 && weight < 100 && RandomNumber.getRandomNumber(10) < 5 - getPrestige()) {
@@ -236,6 +241,7 @@ public abstract class Pet implements Serializable {
 		if (alive)
 		{
 			// If the pet is alive, adjust its traits.
+			actionPoints = 2;
 			updateTraits();
 		}
 	}

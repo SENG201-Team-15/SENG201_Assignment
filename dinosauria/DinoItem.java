@@ -1,6 +1,8 @@
 package dinosauria;
 
-public class DinoItem {
+import java.io.Serializable;
+
+public class DinoItem implements Serializable {
 	public int price;
 	public int boredomLoss; // happiness
 	public String description; 

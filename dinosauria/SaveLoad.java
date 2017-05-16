@@ -6,7 +6,6 @@ package dinosauria;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -21,14 +20,14 @@ public class SaveLoad {
 	 * 
 	 * @param file
 	 * @param players
-	 * @param playerNumber
+	 * @param currentPlayer
 	 * @param dayNumber
 	 * @param currentDay
-	 * @param actionPoints
 	 * @return
 	 */
 	public static int saveGame (String file, ArrayList<Player> players, 
-								int playerNumber, int dayNumber, int currentDay, int actionPoints)
+								int currentPlayer, int dayNumber, int currentDay,
+								String enableType, Pet selectedPet)
 	{
 		try {
 			File testFile = new File(file + ".dino");
@@ -44,10 +43,11 @@ public class SaveLoad {
 				FileOutputStream save = new FileOutputStream(file + ".dino");
 				ObjectOutputStream out = new ObjectOutputStream(save);
 				out.writeObject(players);
-				out.writeInt(playerNumber);
+				out.writeInt(currentPlayer);
 				out.writeInt(dayNumber);
 				out.writeInt(currentDay);
-				out.writeInt(actionPoints);
+				out.writeObject(enableType);
+				out.writeObject(selectedPet);
 				out.close();
 				save.close();
 				return 0;
@@ -67,13 +67,14 @@ public class SaveLoad {
 			ObjectInputStream in = new ObjectInputStream(save);
 			
 			ArrayList<Player> players = (ArrayList<Player>) in.readObject();
-			int playerNumber = in.readInt();
+			int currentPlayer = in.readInt();
 			int dayNumber = in.readInt();
 			int currentDay = in.readInt();
-			int actionPoints = in.readInt();
+			String enableType = (String) in.readObject();
+			Pet selectedPet = (Pet) in.readObject();
 			in.close();
 			save.close();
-			return GameGUI.setGameState(players, playerNumber, dayNumber, currentDay, actionPoints);
+			return GameGUI.setGameState(players, currentPlayer, dayNumber, currentDay, enableType, selectedPet);
 		} catch(IOException e) {
 			return false;
 		} catch(ClassNotFoundException c) {
